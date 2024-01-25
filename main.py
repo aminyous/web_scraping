@@ -1,47 +1,47 @@
 from bs4 import BeautifulSoup
 
-SIMPLE_HTML = """<html>
-<head></head>
-<body>
-<h1>This is a title</h1>
-<p class="subtitle">Lorem ipsum dolar. lorem Consesteur edipsum</p>
-<p>another p without class</p>
-<p>sdfjhdsfksdhf</p>
-<ul>
-<li>Rolf</li>
-<li>Charlie</li>
-<li>Jen</li>
-<li>Jose</li>
-</ul>
-</body>
-</html>
-"""
+ITEM_HTML = '''<html><head></head><body>
+<li class="col-xs-6 col-sm-4 col-md-3 col-lg-3">
+    <article class="product_pod">
+            <div class="image_container">
+                    <a href="catalogue/a-light-in-the-attic_1000/index.html"><img src="media/cache/2c/da/2cdad67c44b002e7ead0cc35693c0e8b.jpg" alt="A Light in the Attic" class="thumbnail"></a>
+            </div>
+                <p class="star-rating Three">
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                    <i class="icon-star"></i>
+                </p>
+            <h3><a href="catalogue/a-light-in-the-attic_1000/index.html" title="A Light in the Attic">A Light in the ...</a></h3>
+            <div class="product_price">
+        <p class="price_color">£51.77</p>
+<p class="instock availability">
+    <i class="icon-ok"></i>
 
-simple_soup = BeautifulSoup(SIMPLE_HTML, "html.parser")
+        In stock
 
+</p>
+    <form>
+        <button type="submit" class="btn btn-primary btn-block" data-loading-text="Adding...">Add to basket</button>
+    </form>
+            </div>
+    </article>
+</li>
 
-def find_title():
-    print(simple_soup.find("h1"))
-    print(simple_soup.find("h1").string)
+</body></html>
+'''
 
-
-def find_list_items():
-    list_item = [item.string for item in simple_soup.find_all("li")]
-    print(list_item)
-
-
-def find_subtitle():
-    paragraph = simple_soup.find("p", {"class": "subtitle"})
-    print(paragraph.string)
-
-
-def find_other_parag():
-    paragraphs = simple_soup.find_all("p")
-    other_paragraph = [p for p in paragraphs if 'subtitle' not in p.attrs.get("class", [])]
-    print(other_paragraph)
+soup = BeautifulSoup(ITEM_HTML, "html.parser")
 
 
-find_title()
-find_list_items()
-find_subtitle()
-find_other_parag()
+def find_title_name():
+    locator = "article.product_pod h3 a"
+    item_link = soup.select_one(locator)
+    item_name = item_link.attrs["title"]
+    print(item_name)
+
+
+find_title_name()
+
+
