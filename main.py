@@ -1,3 +1,5 @@
+import re
+
 from bs4 import BeautifulSoup
 
 ITEM_HTML = '''<html><head></head><body>
@@ -38,10 +40,20 @@ soup = BeautifulSoup(ITEM_HTML, "html.parser")
 def find_title_name():
     locator = "article.product_pod h3 a"
     item_link = soup.select_one(locator)
-    item_name = item_link.attrs["title"]
+    item_name = item_link.attrs["href"]
     print(item_name)
 
 
-find_title_name()
+def find_item_price():
+    locator = "article.product_pod p.price_color"
+    item_price = soup.select_one(locator).string
 
+    pattern = '£([0-9]+\.[0-9]+)'
+    matcher = re.search(pattern, item_price)
+    print(matcher.group(0))
+    print(float(matcher.group(1)))
+
+
+find_title_name()
+find_item_price()
 
