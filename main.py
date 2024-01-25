@@ -54,6 +54,15 @@ def find_item_price():
     print(float(matcher.group(1)))
 
 
+def find_item_rating():
+    locator = "article.product_pod p.star-rating"
+    start_rating_tag = soup.select_one(locator)
+    classes = start_rating_tag.attrs["class"]
+    rating_classes = [r for r in classes if r != "star-rating"]
+    print(rating_classes[0])
+
+
 find_title_name()
 find_item_price()
+find_item_rating()
 
