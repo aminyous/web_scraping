@@ -34,35 +34,41 @@ ITEM_HTML = '''<html><head></head><body>
 </body></html>
 '''
 
-soup = BeautifulSoup(ITEM_HTML, "html.parser")
+
+class ParsedItem:
+
+    def __init__(self, page):
+        self.soup = BeautifulSoup(page, "html.parser")
+
+    @property
+    def name(self):
+        locator = "article.product_pod h3 a"
+        item_link = self.soup.select_one(locator)
+        item_name = item_link.attrs["href"]
+        return item_name
+
+    @property
+    def price(self):
+        locator = "article.product_pod p.price_color"
+        item_price = self.soup.select_one(locator).string
+
+        pattern = '£([0-9]+\.[0-9]+)'
+        matcher = re.search(pattern, item_price)
+        print(matcher.group(0))
+        return float(matcher.group(1))
+
+    @property
+    def rating(self):
+        locator = "article.product_pod p.star-rating"
+        start_rating_tag = self.soup.select_one(locator)
+        classes = start_rating_tag.attrs["class"]
+        rating_classes = [r for r in classes if r != "star-rating"]
+        return rating_classes[0]
 
 
-def find_title_name():
-    locator = "article.product_pod h3 a"
-    item_link = soup.select_one(locator)
-    item_name = item_link.attrs["href"]
-    print(item_name)
+item = ParsedItem(ITEM_HTML)
 
-
-def find_item_price():
-    locator = "article.product_pod p.price_color"
-    item_price = soup.select_one(locator).string
-
-    pattern = '£([0-9]+\.[0-9]+)'
-    matcher = re.search(pattern, item_price)
-    print(matcher.group(0))
-    print(float(matcher.group(1)))
-
-
-def find_item_rating():
-    locator = "article.product_pod p.star-rating"
-    start_rating_tag = soup.select_one(locator)
-    classes = start_rating_tag.attrs["class"]
-    rating_classes = [r for r in classes if r != "star-rating"]
-    print(rating_classes[0])
-
-
-find_title_name()
-find_item_price()
-find_item_rating()
+print(item.name)
+print(item.price)
+print(item.rating)
 
